@@ -1,3 +1,4 @@
+from time import sleep
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -71,6 +72,7 @@ def job(movie_list,j):
 """
 
 for store in movie_data:
+    sleep(1)
     temp_dict = {}
     print(i)
     i+=1
@@ -90,7 +92,7 @@ for store in movie_data:
 
     for g in genres:
         if not g.text.startswith('Back'):
-            temp_dict['genres'].append(g.text) 
+            temp_dict['genres'].append(g.text.lower()) 
 
     #the director of the movie
 
@@ -98,8 +100,7 @@ for store in movie_data:
     if director is None:
         temp_dict['director']='*******'
     else:
-        director=director.text
-        temp_dict['director']=director
+        temp_dict['director']=director.text.lower()
 
     
     #the rating of the movie
@@ -114,12 +115,13 @@ for store in movie_data:
     #released year of the movie and the length of the movie
     yearAndTime=soup.find('ul', class_='ipc-inline-list ipc-inline-list--show-dividers sc-d8941411-2 cdJsTz baseAlt')
     if yearAndTime is not None:
-        year=yearAndTime.text[:4]
+        yearAndTime=yearAndTime.text.replace('Not Rated' , 'NR')
+        year=yearAndTime[:4]
         temp_dict['year']= year
         try:
-            time=yearAndTime.text[yearAndTime.text.index(' ')-2 : ]
+            time=yearAndTime[yearAndTime.index(' ')-2 : ]
         except:
-            time=yearAndTime.text[-2: ]
+            time=yearAndTime[-2: ]
         print(time)
         temp_dict['time']= time
     else:
@@ -132,7 +134,7 @@ for store in movie_data:
     #check ifn allActors[a] exists!!!!!!!!!!!!!!!!!!!!!!
     for a in range(5):
         if len(allActors) > a:
-            temp_dict['actors'].append(allActors[a].text)
+            temp_dict['actors'].append(allActors[a].text.lower())
         else:
             break  
     

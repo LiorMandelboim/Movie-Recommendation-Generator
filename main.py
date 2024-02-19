@@ -2,18 +2,22 @@ import ast
 import json
 import operator
 import pandas as pd 
+import difflib
 
 
 df = pd.read_csv('movies.csv')
-pref = {'genres' : 'Action' , 'director' : None , 'rating' : 8.5 , 'year' : 1990 ,
-        'time' : '120-150' , 'actors' : 'Brad Pitt'}
+
+pref = {'genres' : 'Action' , 'director' : 'peter jackson' , 'rating' : 8.5 , 'year' : 1990 ,
+        'time' : '120-150' , 'actors' : None}
+
 
 final_scores = {}
 
 def place_in_list(attr_list: str, user_input: str):
     modified_l = ast.literal_eval(attr_list)
+    close_matches=difflib.get_close_matches(user_input, modified_l)
     try:
-        return float(1/(modified_l.index(user_input)+1))
+        return float(1/(modified_l.index(close_matches[0])+1))
     except:
           return 0
 
@@ -38,7 +42,11 @@ def hours_minutes_to_minutes(time_str):
          return 0
     
 def is_same_value(value: str , user_input: str):
-      return  1 if value==user_input else 0
+      listed_val=[value]
+      close_matches=difflib.get_close_matches(user_input, listed_val)
+      if len(close_matches)>1:
+           print (close_matches[0])
+      return  1 if len(close_matches)>0 else 0
 
 def is_value_gt(value , user_input):
       return  1 if float(value)>=float(user_input) else 0
@@ -60,11 +68,18 @@ weights = {'genres' : {'score' : 10, 'func' : place_in_list} ,
         'time' : {'score' : 4 , 'func': is_value_in_range}  , 
         'actors' : {'score' : 15 , 'func' : place_in_list}}
 
+
 for _, value in df.iterrows():
       final_scores[value['name']]=0 
       for k , v in weights.items():
          if pref[k] is not None:
-                final_scores[value['name']]+=v['score']*v['func'](value[k], pref[k]) 
+            if isinstance(pref[k], str):
+                  final_scores[value['name']]+=v['score']*v['func'](value[k], pref[k].lower()) 
+            elif isinstance(pref[k], list):
+                 for i in pref[k]:
+                       final_scores[value['name']]+=v['score']*v['func'](value[k], i.lower())
+            else:
+                 final_scores[value['name']]+=v['score']*v['func'](value[k], pref[k]) 
 
 
 sorted_movies = dict(sorted(final_scores.items(), key=operator.itemgetter(1) , reverse=True))
