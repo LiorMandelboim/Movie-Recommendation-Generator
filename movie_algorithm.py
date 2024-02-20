@@ -1,5 +1,4 @@
 import ast
-import json
 import operator
 import pandas as pd 
 import difflib
@@ -103,7 +102,6 @@ class Movie_Recommendation:
             top_five_movies = {}
             count = 0
             for key, value in all_movies_sorted.items():
-                  print(key, ':', value)
                   count += 1
                   top_five_movies[key] = value
                   if count == 5:

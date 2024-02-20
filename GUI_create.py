@@ -1,14 +1,10 @@
 from io import BytesIO
 import tkinter as tk
-from tkinter import messagebox
 import tkinter.ttk as ttk
-from main import Movie_Recommendation as MR
-
+from movie_algorithm import Movie_Recommendation as MR
 from urllib.request import urlopen
-
 from PIL import Image, ImageTk
-import requests
-from bs4 import BeautifulSoup
+
 
 
 class create_labeled_combobox(ttk.Frame):
@@ -42,13 +38,15 @@ class create_labeled_movie(ttk.Frame):
                 img = Image.open(BytesIO(data))
                 img = img.resize((181, 267)) 
                 image = ImageTk.PhotoImage(img)
-                label = ttk.Label(self, image=image )
+                label = ttk.Label(self, image=image , anchor="w")
                 label.image = image  
                 label.pack(side="left")
-            title = ttk.Label(self , text=movie_name)
+            title = ttk.Label(self , text=movie_name+"," , font=(15))
             title.pack(side="left")
 
-            score = ttk.Label(self , text=movie_final_score)
+            s = ttk.Label(self , text="Movie final score:" , font=(7))
+            s.pack(side="left")
+            score = ttk.Label(self , text=movie_final_score , font=(10))
             score.pack(side="left")
         
 
@@ -77,16 +75,36 @@ class Application:
     def winners_window(self , top_five_movies):
         self.new_window = tk.Toplevel(self.root)
         self.new_window.title("Winners")
-        self.new_window.configure(background='yellow')
+
+        self.title = ttk.Label(self.new_window, text="Movie Recommencdations" , font=("Arial Bold" , 30))
+        self.title.pack(pady=15 , padx=30)
+        # Create a canvas widget to contain the content
+        self.canvas = tk.Canvas(self.new_window)
+        self.canvas.pack(side="left", fill="both", expand=True)
+
+        # Create a frame inside the canvas to hold the content
+        self.frame = ttk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.frame, anchor="nw")
 
 
         for movie, rating in top_five_movies.items():
             img_url = self.MR.get_movie_url(movie)
-            self.movie_line = create_labeled_movie(self.new_window, movie , rating , img_url)
-            self.movie_line.pack()
+            self.movie_line = create_labeled_movie(self.frame, movie , rating , img_url)
+            self.movie_line.pack(fill="both" , expand=True)
+
+        # Create a vertical scrollbar and link it to the canvas
+        self.scrollbar = ttk.Scrollbar(self.new_window, orient="vertical", command=self.canvas.yview)
+        self.scrollbar.pack(side="right", fill="y")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        # Bind the canvas to respond to changes in size
+        self.frame.bind("<Configure>", self.on_frame_configure)
 
 
 
+    def on_frame_configure(self, event):
+        # Update the scroll region of the canvas to encompass the entire frame
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
 
 

@@ -2,8 +2,7 @@ from time import sleep
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-import re
-import threading
+
 
 
 # Send a GET request to the webpage
