@@ -1,1 +1,1 @@
-download_image
+style="Pink.TFrame"

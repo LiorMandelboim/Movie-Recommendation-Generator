@@ -110,15 +110,15 @@ class Application:
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
 
-
-
-
     
     def create_widgets(self):
         self.top_label = tk.Label(self.root , text ="Movie Recommendation Generator" , font=("Arial Bold" , 30))
         self.top_label.pack(padx=20,pady=20)
         
-        self.middle_frame = ttk.Frame(self.root)
+        style = ttk.Style()
+        style.configure("Pink.TFrame", background="pink")
+        self.middle_frame = ttk.Frame(self.root , style="Pink.TFrame")
+        
 
         start_rate = 80  
         end_rate = 93    

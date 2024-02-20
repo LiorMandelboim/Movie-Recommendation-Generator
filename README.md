@@ -9,15 +9,16 @@ the project has 4 files:
 4. GUI_create.py- this class creates the GUI using Tkinter library. the class contains several more classes when each one creates a different kind of label. At the end of the program it shows the best recommended movies by order, with posters.
 
 ## Installation
-- Step 1: Clone the repository
+- Step 1: Run the following command to clone the repository:
+    ```
+   git clone https://github.com/LiorMandelboim/Tondo
+   ```
 - Step 2: Install dependencies:
-pip install pandas
-pip install requests
-pip install beautifulsoup4
-pip install Pillow
-- Step 3: Run GUI_create.py
+    Run `pip install -r requirements.txt`
+- Step 3: Python GUI_create.py
 
-To see the posters, you must have an internet connection
+*To see the posters,and run database.py you must have an internet connection.
+*All fields are optional.
 
 
 

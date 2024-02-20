@@ -21,7 +21,7 @@ class Movie_Recommendation:
                   if not isinstance(modified_l,list):
                         modified_l = [modified_l]
                   for val in modified_l:
-                        values.add(val)
+                        values.add(val[0].upper() + val[1:])
             return list(sorted(values))
       
       
@@ -38,7 +38,6 @@ class Movie_Recommendation:
                                       modified_l = ast.literal_eval(value[k])
                                       close_matches=difflib.get_close_matches(pref[k].lower(), modified_l , cutoff=0.9)
                                       if len(close_matches)>0:
-                                           print(close_matches[0])
                                            self.final_scores[value['name']]+=v['score']*v['func'](value[k],close_matches[0] )    
                                     else:
                                           self.final_scores[value['name']]+=v['score']*v['func'](value[k], pref[k].lower()) 

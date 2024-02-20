@@ -55,7 +55,7 @@ for store in movie_data:
 
     director = soup.find('div', class_='ipc-metadata-list-item__content-container')
     if director is None:
-        temp_dict['director']='*******'
+        continue
     else:
         temp_dict['director']=director.text.lower()
 
@@ -63,7 +63,7 @@ for store in movie_data:
     #the rating of the movie
     rating = soup.find('span', class_='sc-bde20123-1 cMEQkK')
     if rating is None:
-        temp_dict['rating']='*******'
+        continue
     else:
         rating=rating.text
         temp_dict['rating']=rating
@@ -82,8 +82,7 @@ for store in movie_data:
         print(time)
         temp_dict['time']= time
     else:
-        temp_dict['year']='^^^^^^'
-        temp_dict['time']='^^^^^^'
+        continue
    
     #the main actors of the movie
     allActors = soup.findAll('a', attrs={'data-testid': 'title-cast-item__actor'})
@@ -102,8 +101,7 @@ for store in movie_data:
     try:
         image_url = meta_tag['content']
     except:
-        print(soup)
-        exit()
+        continue
 
 
     temp_dict['picture'] = image_url
