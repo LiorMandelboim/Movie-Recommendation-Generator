@@ -14,7 +14,7 @@ Features:
 
 * Top Movie Selection: After calculating scores for all movies, the algorithm selects the top five highest-scoring movies to recommend to the user. These movies represent the best matches for the user's preferences.
 
-* The project has 4 files:
+The project has 4 files:
 1. `database.py`- creates the database using web scraping.
 2. `movies.csv`- the movies' database.
 3. `movie_algorithm.py`- runs the recommendation algorithm and returns the top 5           recommended movies
