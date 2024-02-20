@@ -132,7 +132,7 @@ class Application:
         self.genres.pack(side="left" , pady=20)
     
         length = ['60-90' , '90-120' , '120-150' , '150-180' , '180+']
-        self.length = create_labeled_combobox(self.middle_frame , "Length(min):" , length)
+        self.length = create_labeled_combobox(self.middle_frame , "Duration(min):" , length)
         self.length.pack(side="left", pady=20)
         self.middle_frame.pack()
 
