@@ -1,7 +1,10 @@
+from io import BytesIO
 import tkinter as tk
 from tkinter import messagebox
 import tkinter.ttk as ttk
 from main import Movie_Recommendation as MR
+
+from urllib.request import urlopen
 
 from PIL import Image, ImageTk
 import requests
@@ -30,6 +33,23 @@ class create_labeled_entry(ttk.Frame):
         
         def get_value(self):
              return self.textbox.get()
+
+class create_labeled_movie(ttk.Frame):
+        def __init__(self, parent, movie_name, movie_final_score , img_url):
+            ttk.Frame.__init__(self , parent)
+            with urlopen(img_url) as response:
+                data = response.read()
+                img = Image.open(BytesIO(data))
+                img = img.resize((181, 267)) 
+                image = ImageTk.PhotoImage(img)
+                label = ttk.Label(self, image=image )
+                label.image = image  
+                label.pack(side="left")
+            title = ttk.Label(self , text=movie_name)
+            title.pack(side="left")
+
+            score = ttk.Label(self , text=movie_final_score)
+            score.pack(side="left")
         
 
 
@@ -59,26 +79,19 @@ class Application:
         self.new_window.title("Winners")
         self.new_window.configure(background='yellow')
 
-                # Create headers for the table
-        headers = ("Movie", "Match Score")
-
-        style = ttk.Style()
-        style.theme_use("clam")  # Use a built-in theme
-        style.configure("Yellow.Treeview", background="yellow", foreground="black") 
-
-        # Create Treeview widget for the table
-        tree = ttk.Treeview(self.new_window, columns=headers, show="headings" , style="Yellow.Treeview")
-        tree.pack()
-
-        # Add headers to the table
-        for header in headers:
-            tree.heading(header, text=header)
-        
-        tree.column("Movie", width=250)
-
 
         for movie, rating in top_five_movies.items():
-            tree.insert("", "end", values=(movie, rating))
+            img_url = self.MR.get_movie_url(movie)
+            self.movie_line = create_labeled_movie(self.new_window, movie , rating , img_url)
+            self.movie_line.pack()
+
+
+
+
+
+
+
+
     
     def create_widgets(self):
         self.top_label = tk.Label(self.root , text ="Movie Recommendation Generator" , font=("Arial Bold" , 30))
@@ -114,6 +127,8 @@ class Application:
         self.button= ttk.Button(self.root, text = "Submit" , command=self.execute)
         self.button.pack(side="right" , pady=20)
     
+
+
 
 Application()
 

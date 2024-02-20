@@ -8,6 +8,10 @@ import threading
 
 # Send a GET request to the webpage
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+headers = {
+    'Accept-Language': 'en-US',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
+}
 url = "https://www.imdb.com/chart/top/?ref_=nv_mv_250"
 response = requests.get(url, headers=headers)
 html_content = response.content
@@ -37,6 +41,10 @@ for store in movie_data:
     response = requests.get(full_imdb_url, headers=headers)
     html_content = response.content
     soup = BeautifulSoup(html_content, "html.parser")
+    while soup is None:
+        sleep(2)
+        print("trying again")
+        soup = BeautifulSoup(html_content, "html.parser")
     genres =soup.findAll('span', class_='ipc-chip__text')
     temp_dict['genres'] = []
 
@@ -81,7 +89,6 @@ for store in movie_data:
     #the main actors of the movie
     allActors = soup.findAll('a', attrs={'data-testid': 'title-cast-item__actor'})
     temp_dict['actors']=[]
-    #check ifn allActors[a] exists!!!!!!!!!!!!!!!!!!!!!!
     for a in range(5):
         if len(allActors) > a:
             temp_dict['actors'].append(allActors[a].text.lower())
@@ -89,8 +96,21 @@ for store in movie_data:
             break 
 
     temp_dict['url'] = full_imdb_url 
+
+    meta_tag = soup.find('meta' , property="og:image")
+
+        # Extract the value from the content attribute
+    try:
+        image_url = meta_tag['content']
+    except:
+        print(soup)
+        exit()
+
+
+    temp_dict['picture'] = image_url
     
     movie_list.append(temp_dict)
+
 
 
 df = pd.DataFrame(movie_list)

@@ -109,6 +109,11 @@ class Movie_Recommendation:
                   if count == 5:
                         break
             return top_five_movies
+      
+      def get_movie_url(self , movie_name):
+            row = self.df.loc[self.df['name'] == movie_name]
+            return row.iloc[0, -1]
+
 
 
 
