@@ -33,14 +33,17 @@ class create_labeled_entry(ttk.Frame):
 class create_labeled_movie(ttk.Frame):
         def __init__(self, parent, movie_name, movie_final_score , img_url):
             ttk.Frame.__init__(self , parent)
-            with urlopen(img_url) as response:
-                data = response.read()
-                img = Image.open(BytesIO(data))
-                img = img.resize((181, 267)) 
-                image = ImageTk.PhotoImage(img)
-                label = ttk.Label(self, image=image , anchor="w")
-                label.image = image  
-                label.pack(side="left")
+            try:
+                with urlopen(img_url) as response:
+                    data = response.read()
+                    img = Image.open(BytesIO(data))
+                    img = img.resize((181, 267)) 
+                    image = ImageTk.PhotoImage(img)
+                    label = ttk.Label(self, image=image , anchor="w")
+                    label.image = image  
+                    label.pack(side="left")
+            except:
+                 pass
             title = ttk.Label(self , text=movie_name+"," , font=(15))
             title.pack(side="left")
 
